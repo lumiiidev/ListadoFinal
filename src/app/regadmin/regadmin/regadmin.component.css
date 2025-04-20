@@ -25,3 +25,8 @@
   mat-icon-button {
     margin-left: 50px;
   }
+  mat-card-header {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
