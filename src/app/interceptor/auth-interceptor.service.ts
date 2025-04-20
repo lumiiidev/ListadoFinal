@@ -20,11 +20,12 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const token = authService.getToken();
 
-  // These endpoints don't need a token or refresh logic
+    // Estos endpoints no necesitan un token o lógica de actualización
   const excludedUrls = ['/login', '/register'];
   const isExcluded = excludedUrls.some(url => req.url.includes(url));
 
-  // Attach token if present and not excluded
+  
+  // Si el token no es nulo y la URL no está en la lista de exclusión, se agrega el token a la solicitud
   const authReq = token && !isExcluded
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;
@@ -32,28 +33,28 @@ export const authInterceptor: HttpInterceptorFn = (
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !req.url.includes('/refresh')) {
-        // Try to refresh the token
+        // Intentar refrescar el token
         return authService.refreshToken().pipe(
           switchMap((refreshResponse: any) => {
             const newToken = refreshResponse.authorization?.token;
 
             if (newToken) {
               authService.saveToken(newToken);
-
-              // Retry the original request with the new token
+              
+              // Intentar la solicitud original con el nuevo token
               const retryReq = req.clone({
                 setHeaders: { Authorization: `Bearer ${newToken}` }
               });
 
               return next(retryReq);
-            } else {
-              // Refresh failed: logout
+            } else {              
+              // Si no se obtiene un nuevo token, se maneja el cierre de sesión
               handleLogout(authService, router);
               return throwError(() => error);
             }
           }),
-          catchError(refreshError => {
-            // Refresh itself failed: logout
+          catchError(refreshError => {            
+            // Si la actualización falla, se maneja el cierre de sesión
             handleLogout(authService, router);
             return throwError(() => refreshError);
           })
