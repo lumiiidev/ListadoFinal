@@ -1,0 +1,36 @@
+.container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  
+  .error-message {
+    color: #f44336;
+    margin-top: 16px;
+    text-align: center;
+  }
+  
+  mat-card-title {
+    margin-bottom: 20px;
+  }
+  
+  mat-card {
+    margin-top: 20px;
+  }

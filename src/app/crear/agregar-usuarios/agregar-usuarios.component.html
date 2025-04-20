@@ -1,0 +1,56 @@
+<div class="container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ id ? 'Editar Usuario' : 'Agregar Usuario' }}</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Pablo Perez Garcia">
+            <mat-error *ngIf="userForm.get('name')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Área</mat-label>
+            <input matInput formControlName="area" placeholder="IT">
+            <mat-error *ngIf="userForm.get('area')?.hasError('required')">
+              El área es requerida
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Dirección IP</mat-label>
+            <input matInput formControlName="ip_address" placeholder="172.16.52.85">
+            <mat-error *ngIf="userForm.get('ip_address')?.hasError('required')">
+              La dirección IP es requerida
+            </mat-error>
+            <mat-error *ngIf="userForm.get('ip_address')?.hasError('pattern')">
+              Formato de IP inválido
+            </mat-error>
+          </mat-form-field>
+  
+          <div class="button-container">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">
+              {{ id ? 'Guardar' : 'Crear' }}
+            </button>
+            
+            <button mat-raised-button color="warn" type="button" *ngIf="id" (click)="eliminarIP()">
+              Eliminar
+            </button>
+  
+            <button mat-button type="button" routerLink="/listado">
+              Cancelar
+            </button>
+          </div>
+  
+          <div class="error-message" *ngIf="mensajeError">
+            {{ mensajeError }}
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
