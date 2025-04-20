@@ -11,6 +11,8 @@ export class AuthService {
   //loggingStatus = new Subject<boolean>();
   public isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+  private currentUserName: string = '';
+  router: any;
   
   isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
@@ -45,7 +47,7 @@ export class AuthService {
   // Logout function
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/logout`, {});
-  }
+  }  
 
   // Token refresh function
   refreshToken(): Observable<any> {
@@ -70,4 +72,17 @@ export class AuthService {
     this.isAuthenticatedSubject.next(false); // Update the authentication status 
     //this.loggingStatus.next(false);   
   }
+
+  setUserName(name: string) {
+    this.currentUserName = name;
+    localStorage.setItem('userName', name); // Save it locally
+  }
+  
+  getUserName(): string {
+    if (!this.currentUserName) {
+      this.currentUserName = localStorage.getItem('userName') || '';
+    }
+    return this.currentUserName;
+  }
+  
 }

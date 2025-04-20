@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../auth/auth-service.service';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @Component({
@@ -25,7 +26,8 @@ import { AuthService } from '../../auth/auth-service.service';
     MatButtonModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressBarModule
   ]
 })
 export class LoginComponent {
@@ -52,7 +54,9 @@ export class LoginComponent {
         next: (response) => {
           console.log('Login successful:', response);
           this.authService.saveToken(response.authorization.token);
-          alert('Bienvenido Admin!');
+          const userName = response.user?.name || 'Admin';
+          this.authService.setUserName(userName); // 🔥 Set the name globally
+          alert(`Bienvenido ${userName}!`);
           this.router.navigate(['/dashboard']);
           this.loading = false;
         },

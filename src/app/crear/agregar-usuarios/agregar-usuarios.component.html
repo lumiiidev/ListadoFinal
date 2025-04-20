@@ -9,6 +9,9 @@
           <mat-form-field appearance="fill">
             <mat-label>Nombre</mat-label>
             <input matInput formControlName="name" placeholder="Pablo Perez Garcia">
+            <mat-error *ngIf="mensajeError">
+              {{ mensajeError }}
+            </mat-error>
             <mat-error *ngIf="userForm.get('name')?.hasError('required')">
               El nombre es requerido
             </mat-error>
@@ -25,6 +28,9 @@
           <mat-form-field appearance="fill">
             <mat-label>Dirección IP</mat-label>
             <input matInput formControlName="ip_address" placeholder="172.16.52.85">
+            <mat-error *ngIf="mensajeError">
+              {{ mensajeError }}
+            </mat-error>  
             <mat-error *ngIf="userForm.get('ip_address')?.hasError('required')">
               La dirección IP es requerida
             </mat-error>

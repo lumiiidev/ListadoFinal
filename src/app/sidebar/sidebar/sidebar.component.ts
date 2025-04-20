@@ -27,10 +27,11 @@ export class SidebarComponent {
    constructor(
       private authService: AuthService
     ) {}  
-  cerrarSesion(){
-    this.authService.removeToken();
-    console.log(this.authService.removeToken())
-    alert('Has Cerrado Sesión Correctamente!');
-    this.router.navigate(['/login']);
-  }
+    cerrarSesion(){
+      this.authService.removeToken();
+      console.log(this.authService.removeToken())
+      alert('Has Cerrado Sesión Correctamente!');
+      this.router.navigate(['/login']);
+    }
+    
 }

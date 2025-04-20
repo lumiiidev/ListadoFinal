@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -10,6 +10,10 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ServiciosService } from '../../services/services.service';
 import { Router, RouterModule } from '@angular/router';
+
+
+import { MatPaginator } from '@angular/material/paginator';
+import { ViewChild, AfterViewInit } from '@angular/core';
  
 @Component({
   selector: 'app-listado-ips',
@@ -34,8 +38,11 @@ export class ListadoIpsComponent implements OnInit {
   filteredUsers: any[] = [];
   mensajeError: string = '';
   searchControl = new FormControl('');
-  filteredOptions: Observable<string[]> | undefined;
+  filteredOptions: Observable<string[]> | undefined;  
   displayedColumns: string[] = ['name', 'area', 'ip_address', 'eliminar', 'editar'];
+
+  
+  
 
   ngOnInit(): void {
     this.obtenerUsuarios();
@@ -48,12 +55,15 @@ export class ListadoIpsComponent implements OnInit {
     this.searchControl.valueChanges.subscribe(value => {
       this.filterUsers(value || '');
     });
+    
+
+
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.usuarios
-      .map(user => [user.name, user.ip_address])
+      .map(user => [user.name, user.area, user.ip_address])
       .flat()
       .filter(option => option.toLowerCase().includes(filterValue));
   }
@@ -62,6 +72,7 @@ export class ListadoIpsComponent implements OnInit {
     const filterValue = value.toLowerCase();
     this.filteredUsers = this.usuarios.filter(user =>
       user.name.toLowerCase().includes(filterValue) ||
+      user.area.toLowerCase().includes(filterValue) ||
       user.ip_address.toLowerCase().includes(filterValue)
     );
   }

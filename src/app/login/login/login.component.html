@@ -54,13 +54,13 @@
             color="primary" 
             type="submit"
             [disabled]="!loginForm.valid || loading">
-            <mat-spinner 
-              diameter="20" 
+            <!--<mat-spinner 
+              diameter="27" 
               *ngIf="loading"
               class="spinner">
-            </mat-spinner>
-            Login
-          </button>          
+            </mat-spinner>-->            
+            Iniciar Sesión
+          </button>                 
           <!--<button 
             mat-button 
             type="button"
@@ -70,5 +70,6 @@
         </div>
       </form>
     </mat-card-content>
+    <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>   
   </mat-card>
 </div>

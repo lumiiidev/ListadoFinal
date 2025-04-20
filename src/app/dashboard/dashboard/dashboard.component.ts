@@ -12,11 +12,16 @@ import { AuthService } from '../../auth/auth-service.service';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  readonly router = inject(Router); 
+  readonly router = inject(Router);
+  userName: string = ''; 
 
   constructor(
     private authService: AuthService
-  ) {}  
+  ) {}
+  
+  ngOnInit(): void {
+    this.userName = this.authService.getUserName(); 
+  }
 
   getToken(){
     console.log(this.authService.getToken())

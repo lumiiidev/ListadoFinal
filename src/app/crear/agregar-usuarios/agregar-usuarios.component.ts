@@ -63,24 +63,34 @@ export class AgregarUsuariosComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
-      const datos = this.userForm.value;
-      
       if (this.id) {
-        this.serviciosService.editar(this.id, datos).subscribe({
-          next: (response: any) => {
-            console.log('editar', response);
-            alert('Se guardaron los datos correctamente');
-            this.router.navigate(['/listado']);
-          },
-          error: (response: any) => {
-            console.log('error', response);
-            this.mensajeError = 'Ocurrió un error en el servidor';
-          }
-        });
+        this.editUser();
       } else {
+        this.createUser();
+      }
+    }
+  }
+
+
+  createUser() {
+    const datos = this.userForm.value;
+  
+    this.serviciosService.obtenerUsuarios().subscribe({
+      next: (response: any) => {
+        const usuarios = response.data || response;
+  
+        const isDuplicate = usuarios.some((user: any) =>
+          user.name.trim().toLowerCase() === datos.name.trim().toLowerCase() ||
+          user.ip_address === datos.ip_address
+        );
+  
+        if (isDuplicate) {
+          this.mensajeError = 'Ya existe un usuario con ese nombre o dirección IP.';
+          return;
+        }
+  
         this.serviciosService.enviar(datos).subscribe({
-          next: (response: any) => {
-            console.log('next', response);
+          next: () => {
             alert('Se agregó usuario correctamente');
             if (confirm('¿Quieres agregar un nuevo usuario?')) {
               this.userForm.reset();
@@ -88,14 +98,44 @@ export class AgregarUsuariosComponent implements OnInit {
               this.router.navigate(['/listado']);
             }
           },
-          error: (response: any) => {
-            console.log('error', response);
-            this.mensajeError = 'Ocurrió un error en el servidor';
-          }
+          error: () => this.mensajeError = 'Ocurrió un error en el servidor'
         });
-      }
-    }
+      },
+      error: () => this.mensajeError = 'No se pudo verificar duplicados'
+    });
   }
+
+
+  editUser() {
+  const datos = this.userForm.value;
+
+  this.serviciosService.obtenerUsuarios().subscribe({
+    next: (response: any) => {
+      const usuarios = response.data || response;
+
+      const isIPDuplicate = usuarios.some((user: any) =>
+        user.id !== this.id && user.ip_address === datos.ip_address
+      );
+
+      if (isIPDuplicate) {
+        this.mensajeError = 'Ya existe un usuario con esa dirección IP.';
+        return;
+      }
+
+      this.serviciosService.editar(this.id, datos).subscribe({
+        next: () => {
+          alert('Se actualizaron los datos correctamente');
+          this.router.navigate(['/listado']);
+        },
+        error: () => this.mensajeError = 'Ocurrió un error al editar el usuario'
+      });
+    },
+    error: () => this.mensajeError = 'No se pudo verificar duplicados'
+  });
+}
+  
+  
+ 
 
   eliminarIP() {
     if (this.id) {
