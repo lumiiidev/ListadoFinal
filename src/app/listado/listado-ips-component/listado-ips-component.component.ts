@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,12 +28,15 @@ import { ViewChild, AfterViewInit } from '@angular/core';
     MatInputModule,
     MatAutocompleteModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatPaginator
   ]
 })
 export class ListadoIpsComponent implements OnInit {
   readonly servicio = inject(ServiciosService);
-  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  datasource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
   usuarios: any[] = [];
   filteredUsers: any[] = [];
   mensajeError: string = '';
@@ -54,7 +57,9 @@ export class ListadoIpsComponent implements OnInit {
 
     this.searchControl.valueChanges.subscribe(value => {
       this.filterUsers(value || '');
+      this.datasource.filter= value || '';
     });
+
     
 
 
@@ -82,6 +87,8 @@ export class ListadoIpsComponent implements OnInit {
       next: (response: any) => {
         this.usuarios = response.data;
         this.filteredUsers = this.usuarios;
+        this.datasource = new MatTableDataSource<any>(response.data)
+        this.datasource.paginator = this.paginator;
       },
       error: (error) => {
         console.error('Error al obtener usuarios:', error);

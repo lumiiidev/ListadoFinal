@@ -23,6 +23,7 @@ import { AuthService } from '../../auth/auth-service.service';
 })
 export class SidebarComponent {
   opened = true;
+  _opened = true;
   readonly router = inject(Router); 
    constructor(
       private authService: AuthService
@@ -33,5 +34,7 @@ export class SidebarComponent {
       alert('Has Cerrado Sesión Correctamente!');
       this.router.navigate(['/login']);
     }
-    
+    toggleSidenav() {
+      this._opened = !this._opened;
+    }
 }

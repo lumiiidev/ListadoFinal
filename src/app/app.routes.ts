@@ -7,6 +7,7 @@ import { AuthGuard } from './auth/auth-guard.guard';
 import { RegadminComponent } from './regadmin/regadmin/regadmin.component';
 import { RedirectComponent } from './redirect/redirect/redirect.component';
 import { loginGuard } from './auth/loginGuard/login.guard';
+import { IpComponent } from './ip-availability/ip/ip.component';
 
 
 export const routes: Routes = [
@@ -17,6 +18,7 @@ export const routes: Routes = [
     {path: 'crear', component: AgregarUsuariosComponent, canActivate: [AuthGuard]},
     {path: 'crear/:id', component: AgregarUsuariosComponent, canActivate: [AuthGuard]},
     {path: 'listado', component: ListadoIpsComponent, canActivate: [AuthGuard]},
+    {path: 'ipcheck', component: IpComponent, canActivate:[AuthGuard]},
     {path: 'regadmin', component: RegadminComponent,canActivate: [AuthGuard]},
     
     {path: '**', redirectTo: 'redirect'}

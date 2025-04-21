@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter, withComponentInputBinding } from '@angular/router'
 import { MatButtonModule } from "@angular/material/button";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatIconModule } from "@angular/material/icon";
+import { MatIcon, MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
 import { routes } from './app.routes';
 import { MatTableModule } from '@angular/material/table';
@@ -16,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { authInterceptor } from './interceptor/auth-interceptor.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -34,7 +35,8 @@ export const appConfig: ApplicationConfig = {
       MatSelectModule,
       MatProgressSpinnerModule,
       MatSidenavModule,
-      MatListModule
+      MatListModule,
+      MatDialogModule
     ])
   ]
 };
