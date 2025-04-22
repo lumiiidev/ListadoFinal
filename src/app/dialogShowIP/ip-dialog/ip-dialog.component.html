@@ -1,9 +1,74 @@
 <h2 mat-dialog-title>IPs disponibles para el segmento {{ data.segment }}</h2>
-<mat-dialog-content>
+<mat-dialog-content *ngIf="!showForm">
   <mat-list>
-    <mat-list-item *ngFor="let ip of data.ips">{{ ip }}</mat-list-item>
+    <mat-list-item *ngFor="let ip of data.ips" (click)="selectIp(ip)" style="cursor: pointer;">
+      {{ ip }}
+    </mat-list-item>
   </mat-list>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
+<mat-dialog-actions align="end" *ngIf="!showForm">  
   <button mat-button mat-dialog-close>Cerrar</button>
 </mat-dialog-actions>
+
+<mat-dialog-content class="container" *ngIf="showForm">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ 'Agregar Usuario' }}</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="userForm" (ngSubmit)="createUser()" class="form-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name" placeholder="Pablo Perez Garcia">
+          <mat-error *ngIf="mensajeError">
+            {{ mensajeError }}
+          </mat-error>
+          <mat-error *ngIf="userForm.get('name')?.hasError('required')">
+            El nombre es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Área</mat-label>
+          <input matInput formControlName="area" placeholder="IT">
+          <mat-error *ngIf="userForm.get('area')?.hasError('required')">
+            El área es requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Dirección IP</mat-label>
+          <input matInput formControlName="ip_address" [value]="dataService.valueSource.getValue()" placeholder="172.16.52.85">
+          <mat-error *ngIf="mensajeError">
+            {{ mensajeError }}
+          </mat-error>  
+          <mat-error *ngIf="userForm.get('ip_address')?.hasError('required')">
+            La dirección IP es requerida
+          </mat-error>
+          <mat-error *ngIf="userForm.get('ip_address')?.hasError('pattern')">
+            Formato de IP inválido
+          </mat-error>                    
+        </mat-form-field>          
+
+        <div class="button-container">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">
+            {{ 'Crear' }}
+          </button>      
+          
+
+          <mat-dialog-actions align="end">
+            <button mat-button type="button" (click)="closeDialog()">Cancelar</button>
+          </mat-dialog-actions>
+        </div>
+
+        <div class="error-message" *ngIf="mensajeError">
+          {{ mensajeError }}
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+
+

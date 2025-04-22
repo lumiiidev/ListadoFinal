@@ -1,9 +1,10 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" [opened]="opened" class="sidenav">
       <mat-toolbar>
-        <mat-icon matListItemIcon>home</mat-icon>
-        <button (click)="toggleSidenav()" class="menu-toggle">Menu</button>        
-        <span >Menu</span>
+        <span>Menú</span>
+        <button mat-icon-button (click)="sidenav.toggle()" class="close-button">
+          <mat-icon>close</mat-icon>
+        </button>   
       </mat-toolbar>
       <mat-nav-list>
         <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
@@ -20,6 +21,11 @@
           <mat-icon matListItemIcon>search</mat-icon>
           <span matListItemTitle>Buscar Usuarios</span>
         </a>
+
+        <a mat-list-item routerLink="/ipcheck" routerLinkActive="active">
+          <mat-icon matListItemIcon>assignment</mat-icon>
+          <span matListItemTitle>Lista de IPs Disponibles</span>
+        </a>   
         
         <a mat-list-item routerLink="/regadmin" routerLinkActive="active">
           <mat-icon matListItemIcon>admin_panel_settings</mat-icon>

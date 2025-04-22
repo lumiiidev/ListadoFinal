@@ -37,7 +37,8 @@
             <mat-error *ngIf="userForm.get('ip_address')?.hasError('pattern')">
               Formato de IP inválido
             </mat-error>
-          </mat-form-field>
+            <button mat-button matSuffix (click)="openIpSelector()">Seleccionar IP</button>
+          </mat-form-field>          
   
           <div class="button-container">
             <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">

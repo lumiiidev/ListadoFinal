@@ -13,6 +13,9 @@ export class AuthService {
   isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
   private currentUserName: string = '';
   router: any;
+  public valueSource = new BehaviorSubject<string>(''); // Initial value
+  currentValue = this.valueSource.asObservable();
+  
   
   isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
@@ -84,5 +87,10 @@ export class AuthService {
     }
     return this.currentUserName;
   }
+
+  updateValue(value: string) {
+    this.valueSource.next(value);
+  }
+
   
 }
