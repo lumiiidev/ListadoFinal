@@ -13,6 +13,7 @@ import { take } from 'rxjs';
 import { IpDialogComponentForTheRegistrationFormComponent } from '../../dialogShowIpRegistrationForm/ip-dialog-for-the-registration-form/ip-dialog-for-the-registration-form.component';
 import { DialogService } from '../../shared/dialog.service';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @Component({
@@ -28,7 +29,8 @@ import { DialogComponent } from '../../shared/dialog/dialog.component';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatAutocompleteModule
   ]  
 })
 export class AgregarUsuariosComponent implements OnInit {
@@ -39,6 +41,9 @@ export class AgregarUsuariosComponent implements OnInit {
 
   userForm: FormGroup;
   mensajeError: string = '';
+
+  ipList: string[] = [];
+  filteredIps: string[] = [];
 
   constructor(private dialog: MatDialog, private sharedDialog: DialogService) {
     
@@ -51,6 +56,7 @@ export class AgregarUsuariosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 1. Load the current user for editing, if there's an ID
     if (this.id) {
       this.serviciosService.mostrarUsuario(this.id).subscribe({
         next: (response: any) => {
@@ -67,7 +73,32 @@ export class AgregarUsuariosComponent implements OnInit {
         }
       });
     }
+  
+    // 2. Get all users to calculate available IPs
+    this.serviciosService.obtenerUsuarios().subscribe(response => {
+      const users = response.data;
+      this.ipList = this.calculateAvailableIps(users);
+      this.filteredIps = [...this.ipList];
+    });
+
+    
+  
+    // 3. Setup live filtering as the user types in the IP field
+    this.userForm.get('ip_address')?.valueChanges.subscribe(value => {
+      this.filterIps(value || '');
+    });
+    
   }
+  
+  //filterIps(search: string = '') {
+    //const term = search.toLowerCase();
+    //this.filteredIps = this.ipList.filter(ip => ip.includes(term));
+  //}
+  filterIps(query: string) {
+    const lowered = query.trim().toLowerCase();
+    this.filteredIps = this.ipList.filter(ip => ip.includes(lowered));
+  }
+  
 
   onSubmit() {
     if (this.userForm.valid) {
@@ -80,7 +111,7 @@ export class AgregarUsuariosComponent implements OnInit {
   }
 
 
-  createUser() {
+  createUser(): void {
     const datos = this.userForm.value;
   
     this.serviciosService.obtenerUsuarios().subscribe({
@@ -99,14 +130,16 @@ export class AgregarUsuariosComponent implements OnInit {
   
         this.serviciosService.enviar(datos).subscribe({
           next: () => {
-            alert('Se agregó usuario correctamente');
-            
-            
-            if (confirm('¿Quieres agregar un nuevo usuario?')) {
-              this.userForm.reset();
-            } else {
-              this.router.navigate(['/listado']);
-            }
+            this.sharedDialog.showAlert('Se agregó usuario correctamente').subscribe(() => {
+              // When user closes the alert, then ask for confirmation to add a new one
+              this.sharedDialog.confirm('¿Quieres agregar un nuevo usuario?').then(confirmNewUser => {
+                if (confirmNewUser) {
+                  this.userForm.reset();
+                } else {
+                  this.router.navigate(['/listado']);
+                }
+              });
+            });
           },
           error: () => this.mensajeError = 'Ocurrió un error en el servidor'
         });
@@ -114,7 +147,7 @@ export class AgregarUsuariosComponent implements OnInit {
       error: () => this.mensajeError = 'No se pudo verificar duplicados'
     });
   }
-
+  
 
   editUser() {
   const datos = this.userForm.value;
@@ -134,8 +167,8 @@ export class AgregarUsuariosComponent implements OnInit {
 
       this.serviciosService.editar(this.id, datos).subscribe({
         next: () => {
-          alert('Se actualizaron los datos correctamente');
-          //this.sharedDialog.showAlert('Se actualizaron los datos correctamente');
+          //alert('Se actualizaron los datos correctamente');
+          this.sharedDialog.showAlert('Se actualizaron los datos correctamente');
           this.router.navigate(['/listado']);
         },
         error: () => this.mensajeError = 'Ocurrió un error al editar el usuario'
@@ -148,24 +181,27 @@ export class AgregarUsuariosComponent implements OnInit {
   
  
 
-  eliminarIP() {
-    if (this.id) {
-      if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-        this.serviciosService.eliminar(this.id).subscribe({
-          next: (response: any) => {
-            alert('Usuario Eliminado');
-            //this.sharedDialog.showAlert('Usuario Eliminado');
-            console.log('eliminar', response);
-            this.router.navigate(['/listado']);
-          },
-          error: (response: any) => {
-            console.log('error', response);
-            this.mensajeError = 'Ocurrió un error en el servidor';
-          }
-        });
-      }
-    }
+eliminarIP(): void {
+  if (this.id) {
+    this.sharedDialog.confirm('¿Estás seguro de que deseas eliminar este usuario?')
+      .then(confirmed => {
+        if (confirmed) {
+          this.serviciosService.eliminar(this.id).subscribe({
+            next: (response: any) => {
+              this.sharedDialog.showAlert('Usuario Eliminado');
+              console.log('eliminar', response);
+              this.router.navigate(['/listado']);
+            },
+            error: (response: any) => {
+              console.log('error', response);
+              this.mensajeError = 'Ocurrió un error en el servidor';
+            }
+          });
+        }
+      });
   }
+}
+
 
   openIpSelector() {
     this.serviciosService.obtenerUsuarios().subscribe(response => {

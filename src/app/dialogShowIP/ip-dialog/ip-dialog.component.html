@@ -18,7 +18,7 @@
     
     <mat-card-content>
       <form [formGroup]="userForm" (ngSubmit)="createUser()" class="form-container">
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Nombre</mat-label>
           <input matInput formControlName="name" placeholder="Pablo Perez Garcia">
           <mat-error *ngIf="mensajeError">
@@ -29,7 +29,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Área</mat-label>
           <input matInput formControlName="area" placeholder="IT">
           <mat-error *ngIf="userForm.get('area')?.hasError('required')">
@@ -37,9 +37,9 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="full-width">
           <mat-label>Dirección IP</mat-label>
-          <input matInput formControlName="ip_address" [value]="dataService.valueSource.getValue()" placeholder="172.16.52.85">
+          <input matInput formControlName="ip_address" [value]="dataService.valueSource.getValue()" placeholder="172.16.52.85" readonly>
           <mat-error *ngIf="mensajeError">
             {{ mensajeError }}
           </mat-error>  
@@ -48,7 +48,8 @@
           </mat-error>
           <mat-error *ngIf="userForm.get('ip_address')?.hasError('pattern')">
             Formato de IP inválido
-          </mat-error>                    
+          </mat-error>
+          <button mat-button matSuffix (click)="openIpSelector()">IPs</button>                    
         </mat-form-field>          
 
         <div class="button-container">

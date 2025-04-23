@@ -14,6 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { ViewChild, AfterViewInit } from '@angular/core';
+import { DialogService } from '../../shared/dialog.service';
  
 @Component({
   selector: 'app-listado-ips',
@@ -44,7 +45,7 @@ export class ListadoIpsComponent implements OnInit {
   filteredOptions: Observable<string[]> | undefined;  
   displayedColumns: string[] = ['name', 'area', 'ip_address', 'eliminar', 'editar'];
 
-  
+  constructor(public sharedDialog: DialogService){ }
   
 
   ngOnInit(): void {
@@ -96,21 +97,27 @@ export class ListadoIpsComponent implements OnInit {
     });
   }
 
-  eliminarIP(id: number) {
+  eliminarIP(id: number): void {
     if (id != 0 && id != null && id != undefined) {
-      if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-        this.servicio.eliminar(id).subscribe({
-          next: (response: any) => {
-            alert('Usuario Eliminado');
-            console.log('eliminar', response);
-            this.obtenerUsuarios();
-          },
-          error: (response: any) => {
-            console.log('error', response);
-            this.mensajeError = 'Ocurrió un error en el servidor';
+      this.sharedDialog.confirm('¿Estás seguro de que deseas eliminar este usuario?')
+        .then((confirmed) => {
+          if (confirmed) {
+            this.servicio.eliminar(id).subscribe({
+              next: (response: any) => {
+                this.sharedDialog.showAlert('El usuario ha sido eliminado');
+                console.log('eliminar', response);
+                this.obtenerUsuarios();
+              },
+              error: (response: any) => {
+                console.log('error', response);
+                this.mensajeError = 'Ocurrió un error en el servidor';
+              }
+            });
+          } else {
+            console.log('Eliminación cancelada por el usuario');
           }
         });
-      }
     }
   }
+  
 }

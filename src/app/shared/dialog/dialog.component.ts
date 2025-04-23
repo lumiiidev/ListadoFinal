@@ -14,6 +14,11 @@ export class DialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { message: string, confirm?: boolean }
   ) {}
 
+  onOK(): void{
+    this.dialogRef.close(false);
+    console.log('OK clicked');
+  }
+  
   onConfirm(): void {
     this.dialogRef.close(true);
     console.log('Confirm clicked');

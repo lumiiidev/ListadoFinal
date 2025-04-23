@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/auth-service.service';
+import { DialogService } from '../../shared/dialog.service';
 
 
 @Component({
@@ -26,12 +27,14 @@ export class SidebarComponent {
   _opened = true;
   readonly router = inject(Router); 
    constructor(
-      private authService: AuthService
+      private authService: AuthService,
+      public sharedDialog: DialogService
     ) {}  
     cerrarSesion(){
       this.authService.removeToken();
       console.log(this.authService.removeToken())
-      alert('Has Cerrado Sesión Correctamente!');
+      //alert('Has Cerrado Sesión Correctamente!');
+      this.sharedDialog.showAlert('Has Cerrado Sesión Correctamente!');
       this.router.navigate(['/login']);
     }
     toggleSidenav() {

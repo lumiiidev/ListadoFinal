@@ -27,18 +27,36 @@
   
           <mat-form-field appearance="fill">
             <mat-label>Dirección IP</mat-label>
-            <input matInput formControlName="ip_address" placeholder="172.16.52.85">
-            <mat-error *ngIf="mensajeError">
-              {{ mensajeError }}
-            </mat-error>  
+            
+            <input
+            type="text"
+            matInput
+            formControlName="ip_address"
+            placeholder="172.16.52.0/24"
+            [matAutocomplete]="auto"
+            />
+
+          
+            <!-- Autocomplete options -->
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let ip of filteredIps" [value]="ip">
+                {{ ip }}
+              </mat-option>
+            </mat-autocomplete>
+          
+            <!-- Error messages -->
+            <mat-error *ngIf="mensajeError">{{ mensajeError }}</mat-error>
             <mat-error *ngIf="userForm.get('ip_address')?.hasError('required')">
               La dirección IP es requerida
             </mat-error>
             <mat-error *ngIf="userForm.get('ip_address')?.hasError('pattern')">
               Formato de IP inválido
             </mat-error>
-            <button mat-button matSuffix (click)="openIpSelector()">Seleccionar IP</button>
-          </mat-form-field>          
+          
+            <!-- IP selector button -->
+            <button mat-button matSuffix (click)="openIpSelector()">IPs</button>
+          </mat-form-field>
+                
   
           <div class="button-container">
             <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">

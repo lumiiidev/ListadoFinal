@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ data.confirm ? 'Confirmación' : 'Aviso' }}</h2>
 <mat-dialog-content>{{ data.message }}</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close *ngIf="!data.confirm">OK</button>
+<mat-dialog-actions align="end">  
+  <button mat-button *ngIf="!data.confirm" (click)="onOK()">OK</button>
   <ng-container *ngIf="data.confirm">
     <button mat-button (click)="onCancel()">Cancelar</button>
     <button mat-button color="primary" (click)="onConfirm()">Aceptar</button>

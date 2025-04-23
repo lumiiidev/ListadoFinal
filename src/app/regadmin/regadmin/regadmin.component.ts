@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { DialogService } from '../../shared/dialog.service';
 
 @Component({
   selector: 'app-regadmin',
@@ -28,7 +29,7 @@ export class RegadminComponent {
   });
 
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, public sharedDialog: DialogService) { }
     
   onSubmit(): void {
     if(this.user.valid){
@@ -36,7 +37,8 @@ export class RegadminComponent {
     this.authService.register(credentials).subscribe({
       next: (response)=>{
         console.log('usuario creado exitosamente:',response);
-        alert("Tu usuario ha sido registrado correctamente!");
+        //alert("Tu usuario ha sido registrado correctamente!");
+        this.sharedDialog.showAlert('Tu usuario ha sido registrado correctamente!')
         this.router.navigate(['/dashboard']);
         console.log(this.user.value); 
 

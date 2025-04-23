@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../auth/auth-service.service';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { DialogService } from '../../shared/dialog.service';
 
 
 @Component({
@@ -44,7 +45,7 @@ export class LoginComponent {
     'password': ['', Validators.required]
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, public sharedDialog: DialogService) {}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
@@ -56,7 +57,8 @@ export class LoginComponent {
           this.authService.saveToken(response.authorization.token);
           const userName = response.user?.name || 'Admin';
           this.authService.setUserName(userName); // 🔥 Set the name globally
-          alert(`Bienvenido ${userName}!`);
+          //alert(`Bienvenido ${userName}!`);
+          //this.sharedDialog.showAlert(`Bienvenido $username !`);
           this.router.navigate(['/dashboard']);
           this.loading = false;
         },

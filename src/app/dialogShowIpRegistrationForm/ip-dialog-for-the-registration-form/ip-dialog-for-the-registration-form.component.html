@@ -1,7 +1,11 @@
 <h2 mat-dialog-title>IPs disponibles para el segmento {{ data.segment }}</h2>
 <mat-dialog-content >
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Buscar IP</mat-label>
+    <input matInput [(ngModel)]="filterText" (input)="applyFilter()" placeholder="Ej: 172.16.52.0/24">
+  </mat-form-field>
   <mat-list>
-    <mat-list-item *ngFor="let ip of data.ips" (click)="selectIp(ip)" style="cursor: pointer;">
+    <mat-list-item *ngFor="let ip of filteredIps" (click)="selectIp(ip)" style="cursor: pointer;">
       {{ ip }}
     </mat-list-item>
   </mat-list>
