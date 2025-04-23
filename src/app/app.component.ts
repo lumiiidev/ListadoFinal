@@ -13,7 +13,7 @@ import { AuthService } from './auth/auth-service.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'SAI';
+  title = 'SAR';
   status$: Observable<boolean> | undefined;
   constructor(private authService: AuthService) { }
 
