@@ -50,7 +50,8 @@ export class AgregarUsuariosComponent implements OnInit {
     this.userForm = this.fb.group({
       name: ['', [Validators.required]],
       area: ['', [Validators.required]],
-      ip_address: ['', [Validators.required, Validators.pattern('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$')]]
+      ip_address: ['', [Validators.required, Validators.pattern('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$')]],
+      macAddress: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[-]){5}([0-9A-Fa-f]{2})$/)]]
     });
     
   }
@@ -247,6 +248,26 @@ eliminarIP(): void {
   
     return allAvailableIps;
   }
+
+  onMacInput(event: any): void {
+    let value = event.target.value.replace(/[^a-fA-F0-9]/g, ''); // strip non-hex chars
+    value = value.substring(0, 12); // 💥 cap at 12 hex characters
+    value = value.toUpperCase();
+  
+    let formatted = '';
+  
+    for (let i = 0; i < value.length; i++) {
+      formatted += value[i];
+      if ((i % 2 === 1) && i < 11) {
+        formatted += '-';
+      }
+    }
+  
+    event.target.value = formatted;
+    this.userForm.get('macAddress')?.setValue(formatted, { emitEvent: false });
+  }
+  
+  
   
   
 
