@@ -51,7 +51,7 @@ export class AgregarUsuariosComponent implements OnInit {
       name: ['', [Validators.required]],
       area: ['', [Validators.required]],
       ip_address: ['', [Validators.required, Validators.pattern('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$')]],
-      macAddress: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[-]){5}([0-9A-Fa-f]{2})$/)]]
+      mac_address: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[-]){5}([0-9A-Fa-f]{2})$/)]]
     });
     
   }
@@ -65,7 +65,8 @@ export class AgregarUsuariosComponent implements OnInit {
           this.userForm.patchValue({
             name: response.data.name,
             area: response.data.area,
-            ip_address: response.data.ip_address
+            ip_address: response.data.ip_address,
+            mac_address: response.data.mac_address 
           });
         },
         error: (response: any) => {
@@ -151,33 +152,33 @@ export class AgregarUsuariosComponent implements OnInit {
   
 
   editUser() {
-  const datos = this.userForm.value;
-
-  this.serviciosService.obtenerUsuarios().subscribe({
-    next: (response: any) => {
-      const usuarios = response.data || response;
-
-      const isIPDuplicate = usuarios.some((user: any) =>
-        user.id !== this.id && user.ip_address === datos.ip_address
-      );
-
-      if (isIPDuplicate) {
-        this.mensajeError = 'Ya existe un usuario con esa dirección IP.';
-        return;
-      }
-
-      this.serviciosService.editar(this.id, datos).subscribe({
-        next: () => {
-          //alert('Se actualizaron los datos correctamente');
-          this.sharedDialog.showAlert('Se actualizaron los datos correctamente');
-          this.router.navigate(['/listado']);
-        },
-        error: () => this.mensajeError = 'Ocurrió un error al editar el usuario'
-      });
-    },
-    error: () => this.mensajeError = 'No se pudo verificar duplicados'
-  });
-}
+    const datos = this.userForm.value;
+  
+    this.serviciosService.obtenerUsuarios().subscribe({
+      next: (response: any) => {
+        const usuarios = response.data || response;
+  
+        const isIPDuplicate = usuarios.some((user: any) =>
+          Number(user.id) !== Number(this.id) && user.ip_address === datos.ip_address
+        );
+  
+        if (isIPDuplicate) {
+          this.mensajeError = 'Ya existe un usuario con esa dirección IP.';
+          return;
+        }
+  
+        this.serviciosService.editar(this.id, datos).subscribe({
+          next: () => {
+            this.sharedDialog.showAlert('Se actualizaron los datos correctamente');
+            this.router.navigate(['/listado']);
+          },
+          error: () => this.mensajeError = 'Ocurrió un error al editar el usuario'
+        });
+      },
+      error: () => this.mensajeError = 'No se pudo verificar duplicados'
+    });
+  }
+  
   
   
  

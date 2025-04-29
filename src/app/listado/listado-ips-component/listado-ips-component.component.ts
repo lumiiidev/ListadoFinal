@@ -43,7 +43,7 @@ export class ListadoIpsComponent implements OnInit {
   mensajeError: string = '';
   searchControl = new FormControl('');
   filteredOptions: Observable<string[]> | undefined;  
-  displayedColumns: string[] = ['name', 'area', 'ip_address', 'eliminar', 'editar'];
+  displayedColumns: string[] = ['name', 'area', 'ip_address', 'mac_address', 'eliminar', 'editar'];
 
   constructor(public sharedDialog: DialogService){ }
   

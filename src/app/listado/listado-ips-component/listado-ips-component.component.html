@@ -1,7 +1,7 @@
 <div class="container">
     <label>Busqueda de Usuarios por: </label> 
     <mat-form-field>     
-      <mat-label>Nombre ó Dirección IP</mat-label>
+      <mat-label>Nombre, IP, Mac Address</mat-label>
       <input matInput
              [formControl]="searchControl"
              [matAutocomplete]="auto">
@@ -14,7 +14,7 @@
   
     <table mat-table [dataSource]="datasource" class="mat-elevation-z8">
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
         <td mat-cell *matCellDef="let user"> {{user.name}} </td>
       </ng-container>
   
@@ -27,6 +27,12 @@
         <th mat-header-cell *matHeaderCellDef> IP Address </th>
         <td mat-cell *matCellDef="let user"> {{user.ip_address}} </td>
       </ng-container>
+
+      <ng-container matColumnDef="mac_address">
+        <th mat-header-cell *matHeaderCellDef> MAC Address </th>
+        <td mat-cell *matCellDef="let user"> {{user.mac_address}} </td>
+      </ng-container>
+      
       
       <ng-container matColumnDef="eliminar">
         <th mat-header-cell *matHeaderCellDef> Eliminar </th>

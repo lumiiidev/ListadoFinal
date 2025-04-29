@@ -50,6 +50,15 @@
             Formato de IP inválido
           </mat-error>
           <button mat-button matSuffix (click)="openIpSelector()">IPs</button>                    
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>MAC Address</mat-label>
+          <input matInput
+                 placeholder="e.g. 71-84-C1-44-93-11"
+                 formControlName="mac_address"
+                 (input)="onMacInput($event)" />
+          <mat-hint>Format: XX-XX-XX-XX-XX-XX</mat-hint>
         </mat-form-field>          
 
         <div class="button-container">
